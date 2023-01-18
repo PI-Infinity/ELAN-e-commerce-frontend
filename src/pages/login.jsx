@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
+import { sendPasswordResetEmail } from "firebase/auth";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -13,6 +14,7 @@ import { Link } from "react-router-dom/";
 import { AuthContext } from "../context/AuthContext";
 import { doc, setDoc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db, DetectLanguage, auth } from "../firebase";
+import { CgClose } from "react-icons/cg";
 
 export default function Login() {
   //signin with email and password
@@ -44,42 +46,147 @@ export default function Login() {
       });
   };
 
-  return (
-    <Container>
-      <Title>Log In</Title>
-      <Form onSubmit={handleLogin}>
-        <Input
-          type="text"
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <Input
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button type="submit" onClick={handleLogin}>
-          შესვლა
-        </Button>
+  // reset password
+  const [openReset, setOpenReset] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [sent, setSent] = useState(false);
 
-        <ForgottPass>Forgott Password?</ForgottPass>
-        {error && (
-          <span style={{ color: "red" }}>Wrong email or password!</span>
-        )}
-      </Form>
-      <SignupText>
-        Don't have a Account?{" "}
-        <Link
-          to="/signup"
-          id="signup"
-          style={{ color: "orange", textDecoration: "none" }}
-        >
-          Register
-        </Link>
-      </SignupText>
-    </Container>
+  const ResetPass = () => {
+    sendPasswordResetEmail(auth, resetEmail)
+      .then(() => {
+        // Password reset email sent!
+        // ..
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  };
+
+  return (
+    <>
+      {openReset && (
+        <ResetBg>
+          <ResetPasswordPopup>
+            {sent ? (
+              <h4>განახლებული პაროლი გაგზავნილია ელ-ფოსტაზე! </h4>
+            ) : (
+              <>
+                <h4>შეიყვანეთ ელ-ფოსტა</h4>
+                <Input
+                  placeholder="Email"
+                  onChange={(e) => setResetEmail(e.target.value)}
+                />
+                <Button
+                  onClick={() => {
+                    setSent(true);
+                    setResetEmail("");
+                    ResetPass();
+                    setTimeout(() => {
+                      setSent(false);
+                      setOpenReset(false);
+                    }, 1500);
+                  }}
+                >
+                  გაგზავნა
+                </Button>
+              </>
+            )}
+          </ResetPasswordPopup>
+          <CgClose
+            size={30}
+            id="closeIcon"
+            onClick={() => setOpenReset(false)}
+          />
+        </ResetBg>
+      )}
+      <Container>
+        <Title>Log In</Title>
+        <Form onSubmit={handleLogin}>
+          <Input
+            type="text"
+            placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            type="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button type="submit" onClick={handleLogin}>
+            შესვლა
+          </Button>
+
+          <ForgottPass
+            onClick={() => {
+              setOpenReset(true);
+            }}
+          >
+            Forgott Password?
+          </ForgottPass>
+          {error && (
+            <span style={{ color: "red" }}>Wrong email or password!</span>
+          )}
+        </Form>
+        <SignupText>
+          Don't have a Account?{" "}
+          <Link
+            to="/signup"
+            id="signup"
+            style={{ color: "orange", textDecoration: "none" }}
+          >
+            Register
+          </Link>
+        </SignupText>
+      </Container>
+    </>
   );
 }
+
+const ResetBg = styled.div`
+  background: rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  #closeIcon {
+    position: fixed;
+    top: 15vw;
+    right: 15vw;
+    cursor: pointer;
+
+    @media only screen and (max-width: 1100px) {
+      top: 35vw;
+      right: 5vw;
+    }
+  }
+`;
+
+const ResetPasswordPopup = styled.div`
+  width: 40vw;
+  height: 25vw;
+  border-radius: 0.5vw;
+  box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  @media only screen and (max-width: 1100px) {
+    width: 90vw;
+    height: 70vw;
+    border-radius: 1.5vw;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -177,10 +284,15 @@ const ForgottPass = styled.p`
   letter-spacing: 0.05vw;
   color: ${(props) => props.theme.font};
   font-size: 0.9vw;
+  cursor: pointer;
 
   @media only screen and (max-width: 600px) {
     font-size: 3.3vw;
     letter-spacing: 0.2vw;
+  }
+
+  :hover {
+    text-decoration: underline;
   }
 `;
 const GoogleBtn = styled.button`

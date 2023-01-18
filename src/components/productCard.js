@@ -9,9 +9,10 @@ import { BsFillCartCheckFill, BsFillCartDashFill } from "react-icons/bs";
 export const ProductCard = (props) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.storeProducts.cart);
-  const title = props.name;
+
+  const name = props.name;
   const price = props.price;
-  const qnt = 1;
+  const quantity = 1;
 
   // define language
   let language;
@@ -41,14 +42,14 @@ export const ProductCard = (props) => {
       </Link>
       <BottomSection>
         <BottomSectionContainer>
-          {cartItems?.find((item) => item.title === props.name) ? (
-            <Button onClick={() => dispatch(removeItem(title))}>
+          {cartItems?.find((item) => item?.name === props.name) ? (
+            <Button onClick={() => dispatch(removeItem(name))}>
               <BsFillCartCheckFill className="button" />
             </Button>
           ) : (
             <Button
               add={true}
-              onClick={() => dispatch(setCart({ title, price, qnt }))}
+              onClick={() => dispatch(setCart({ name, price, quantity }))}
             >
               <BsFillCartCheckFill className="button" />
             </Button>

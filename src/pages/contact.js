@@ -25,20 +25,10 @@ const Contact = () => {
     <Container>
       <Wrapper>
         <h2>{language.title}</h2>
-        <form
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "10px",
-            marginTop: "1vw",
-          }}
-        >
-          <Input type="text" placeholder={language.name} />
-          <Input type="text" placeholder={language.email} />
-          <Textarea type="text" placeholder={language.text} />
-          <Button type="submit">{language.button}</Button>
-        </form>
+
+        <div style={{ marginTop: "15px" }}>Email: elangeorgia@gmail.com</div>
+        <div style={{ marginTop: "15px" }}>phone: +995591635893</div>
+        <div style={{ marginTop: "15px" }}>phone: +995592048101</div>
         <div style={{ marginTop: "15px" }}>{language.socmedia}</div>
         <div style={{ marginTop: "10px", display: "flex", gap: "15px" }}>
           <a href="https://www.facebook.com/elangeorgia" target="_blank">

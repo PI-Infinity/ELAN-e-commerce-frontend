@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { Filter } from "../components/artistFilter";
-import { List } from "../components/artistsList";
-import { Info } from "../components/artistInfo";
-import { Header } from "../components/header";
-import { LoaderAnimation } from "../components/loader";
+import { Filter } from "../../pages/artists/artistFilter";
+import { List } from "../../pages/artists/artistsList";
+import { Info } from "../../pages/artists/artistInfo";
+import { Header } from "../../components/header";
+import { LoaderAnimation } from "../../components/loader";
 
 function Artists() {
   const [loading, setLoading] = React.useState(true);

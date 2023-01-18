@@ -47,11 +47,11 @@ import { Coupon } from "../components/coupon";
 import axios from "axios";
 import { setServer } from "../redux/server";
 
-const Checkout = () => {
+const BookCheckout = () => {
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const [loading, setLoading] = useState(true);
+
   const tbcData = useSelector((state) => state.storeServer.server);
 
   const dispatch = useDispatch();
@@ -67,22 +67,11 @@ const Checkout = () => {
   }
 
   const info = useSelector((state) => state.storeOrder);
-  const cartItems = useSelector((state) => state.storeProducts.cart);
-
-  const DefineSum = () => {
-    let sum = [];
-    const result = cartItems?.map((item) => {
-      return sum.push(item.quantity * item.price);
-    });
-    const initialValue = 0;
-    const sumWithInitial = sum.reduce(
-      (previousValue, currentValue) => previousValue + currentValue,
-      initialValue
-    );
-    return sumWithInitial;
-  };
-
-  const sum = DefineSum();
+  const bookLang = useSelector((state) => state.storeOrder.bookLanguage);
+  // define orders and give number to new order
+  const orderL = useSelector((state) => state.storeDashboard.orderItems);
+  const orderList = JSON.parse(orderL);
+  const orders = orderList?.sort((a, b) => a.orderNumber - b.orderNumber);
 
   const DefineCurrentUserInfo = () => {
     if (currentUser != undefined) {
@@ -93,14 +82,9 @@ const Checkout = () => {
       dispatch(setPhoneNumber(user?.phone));
       dispatch(setCity(user?.adress.city));
       dispatch(setAdress(user?.adress.adress));
-      dispatch(setItems(cartItems));
+      dispatch(setItems({ name: "ELAN Brow Book", language: bookLang }));
       dispatch(setBank("TBC e-commerce"));
-      dispatch(setSum(sum));
-      if (user?.adress.city == "TBILISI") {
-        dispatch(setDelivery("6"));
-      } else {
-        dispatch(setDelivery("10"));
-      }
+      dispatch(setSum(70));
       if (user?.coupon?.length > 0) {
         dispatch(setCoupon(user?.coupon));
       } else {
@@ -126,112 +110,27 @@ const Checkout = () => {
     language = rus;
   }
 
-  // define delivery
-
-  const DefineDelivery = () => {
-    let delivery;
-    if (info?.city?.toLowerCase() == "tbilisi") {
-      delivery = (
-        <fieldset onChange={(e) => dispatch(setDelivery(e.target.value))}>
-          <legend>Choise Delivery:</legend>
-          <div style={{ marginTop: "0.5vw" }}>
-            <input
-              type="radio"
-              id="standart"
-              value="6"
-              name="delivery"
-              defaultChecked={true}
-              required
-            />
-            <span>Standart 6 GEL (1-2 Working Day)</span>
-          </div>
-
-          <div style={{ marginTop: "0.5vw" }}>
-            <input
-              type="radio"
-              id="express"
-              value="12"
-              name="delivery"
-              required
-            />
-            <span>Express 12 GEL (Order Day)</span>
-          </div>
-
-          <div style={{ marginTop: "0.5vw" }}>
-            <input
-              type="radio"
-              id="pickup"
-              value="0"
-              name="delivery"
-              required
-            />
-            <span>Pick Up Free</span>
-          </div>
-        </fieldset>
-      );
-    } else if (
-      info?.city?.length > 3 &&
-      info?.city.toLowerCase() != "tbilisi"
-    ) {
-      delivery = (
-        <fieldset>
-          <legend>Delivery:</legend>
-          <div>
-            <span>Regions 10 GEL (1-4 Working Day)</span>
-          </div>
-        </fieldset>
-      );
-    } else {
-      delivery = undefined;
-    }
-    return delivery;
-  };
-
-  const Delivery = DefineDelivery();
-
-  let deliveryDefined;
-  if (info?.city?.toLowerCase() == "tbilisi") {
-    deliveryDefined = info?.delivery;
-  } else if (info?.city?.length > 3 && info?.city.toLowerCase() != "tbilisi") {
-    deliveryDefined = "10";
-  } else {
-    deliveryDefined = "";
-  }
-
   //
   const coupon = useSelector((state) => state.storeOrder.coupon);
-
   // define total
-
   const DefineTotal = () => {
     let tot;
-    if (deliveryDefined?.length > 0) {
-      tot =
-        parseInt(sum) -
-        (sum / 100) * coupon?.couponPercent +
-        parseInt(deliveryDefined);
+    if (coupon?.couponName?.length > 0) {
+      tot = info?.sum - (info?.sum / 100) * coupon?.couponPercent;
     } else {
-      tot = parseInt(sum);
+      tot = info?.sum;
     }
     return tot;
   };
 
   const total = DefineTotal();
 
-  // add order to firebase
-
-  // define orders and give number to new order
-  const orderL = useSelector((state) => state.storeDashboard.orderItems);
-  const orderList = JSON.parse(orderL);
-  const orders = orderList?.sort((a, b) => a.orderNumber - b.orderNumber);
-  const itemList = useSelector((state) => state.storeProducts.cart);
-  const products = useSelector((state) => state.storeProducts.list);
-
   let lastItem;
   if (orders?.length > -1) {
     lastItem = orders[orders?.length - 1];
   }
 
+  // define order number
   let num;
   if (orders?.length < 1) {
     num = 1;
@@ -240,6 +139,8 @@ const Checkout = () => {
   } else {
     num = lastItem?.orderNumber + 1;
   }
+
+  // add order to firebase
   //
   async function AddOrderToFirebase() {
     const orderList = collection(db, `orders`);
@@ -247,14 +148,14 @@ const Checkout = () => {
       buyer: info?.buyerName,
       phoneNumber: info?.phoneNumber,
       ["adress"]: { city: info?.city, adress: info?.adress },
-      ["items"]: info?.items,
+      items: "ELAN Brow Book",
       coupon: info?.coupon,
-      delivery: info?.delivery,
       discount: info?.discount,
+      delivery: "0",
       orderNumber: num,
       status: "Not Finished",
       orderTime: serverTimestamp(),
-      sum: sum,
+      sum: total,
       bank: "TBC e-commerce",
       comment: info?.comment,
     });
@@ -262,10 +163,10 @@ const Checkout = () => {
   }
 
   // tbc checkout
-
+  const [loading, setLoading] = useState(true);
   const buyItem = async () => {
     const amount = total;
-    const req = await axios.post("api/payments", { amount });
+    const req = await axios.post("/api/payments", { amount });
     dispatch(setServer(req.data));
     setLoading(false);
   };
@@ -364,41 +265,19 @@ const Checkout = () => {
             value={info?.comments}
           />
         </Form>
-        <Coupon currentUser={currentUser} sum={sum} />
+        <Coupon currentUser={currentUser} sum={info?.sum} />
         <OrderContainer>
           <h2 id="yourOrder">Your Order:</h2>
           <ItemList>
-            {cartItems?.map((item, index) => {
-              return (
-                <ItemContainer key={index}>
-                  <ItemName>
-                    <span>{item.name}</span>
-                  </ItemName>
-                  <ItemQnt>
-                    <span style={{ marginRight: "0.2vw" }}>
-                      {item.quantity}
-                    </span>{" "}
-                    {language.pcs}
-                  </ItemQnt>
-                  <ItemPrice>
-                    <span>
-                      {item.price} {language.gel[0]}.{" "}
-                    </span>
-                  </ItemPrice>
-                  <ItemPrice>
-                    <span>
-                      {item.price * item.quantity} {language.gel[0]}.{" "}
-                    </span>
-                  </ItemPrice>
-                </ItemContainer>
-              );
-            })}
+            <ItemContainer>
+              <ItemName>
+                <span>ELAN Brow Book</span>
+              </ItemName>
+              <ItemQnt>{bookLang}</ItemQnt>
+            </ItemContainer>
           </ItemList>
-          <Subtotal>Subtotal: {sum} GEL</Subtotal>
-          <Coupon currentUser={currentUser} sum={sum} desktop={true} />
-          <div style={{ marginTop: "2vw" }} className="deliveryDesktop">
-            {Delivery}
-          </div>
+          <Subtotal>Subtotal: {info?.sum} GEL</Subtotal>
+          <Coupon currentUser={currentUser} sum={info?.sum} desktop={true} />
           <Total total={true}>Total: {total} GEL</Total>
         </OrderContainer>
       </Wrapper>
@@ -408,8 +287,6 @@ const Checkout = () => {
         <Button>
           <div
             onClick={
-              cartItems?.length > 0 &&
-              deliveryDefined?.length > 0 &&
               info?.firstname?.length > 3 &&
               info?.lastname?.length > 3 &&
               info?.city?.length > 2 &&
@@ -432,7 +309,7 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default BookCheckout;
 
 const Container = styled.div`
   display: flex;

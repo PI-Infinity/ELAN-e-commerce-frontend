@@ -11,8 +11,8 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../firebase";
-import { Order } from "../components/order";
+import { db } from "../../firebase";
+import { Order } from "../../pages/dashboard/order";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { CgPlayListRemove } from "react-icons/cg";
 import { useSelector, useDispatch } from "react-redux";
@@ -31,7 +31,7 @@ import {
   setItemName,
   setQnt,
   setItemPrice,
-} from "../redux/placeOrder.js";
+} from "../../redux/placeOrder.js";
 import { MdClose, MdOutlineCleaningServices, MdRemove } from "react-icons/md";
 import {
   BsSortNumericUpAlt,
@@ -42,7 +42,7 @@ import { AiOutlineFileAdd } from "react-icons/ai";
 import {
   StartCalendarComponent,
   EndCalendarComponent,
-} from "../components/calendar";
+} from "../../components/calendar";
 import { RiSearch2Line } from "react-icons/ri";
 import { useNavigate, Link } from "react-router-dom";
 import Loader from "react-js-loader";
@@ -156,7 +156,7 @@ function Orders(props) {
   if (gift === true) {
     statusDefined = "gift";
   } else {
-    statusDefined = "newOrder";
+    statusDefined = "New Order";
   }
 
   // add order to firebase

@@ -16,6 +16,7 @@ const initialState = {
   bank: "",
   sum: "",
   coupon: "",
+  bookLanguage: "ka",
 };
 
 export const Order = createSlice({
@@ -67,6 +68,9 @@ export const Order = createSlice({
     setCoupon: (state, action) => {
       state.coupon = action.payload;
     },
+    setBookLanguage: (state, action) => {
+      state.bookLanguage = action.payload;
+    },
   },
 });
 
@@ -90,5 +94,6 @@ export const {
   setOrderList,
   setSum,
   setEmail,
+  setBookLanguage,
 } = Order.actions;
 export default Order.reducer;

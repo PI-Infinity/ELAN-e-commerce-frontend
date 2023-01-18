@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Styled from "styled-components";
-import { ArtistCard } from "../components/artistCard";
-import { Artists } from "../data/artists";
+import { ArtistCard } from "../../pages/artists/artistCard";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
+import { useSelector, useDispatch } from "react-redux";
 
 export const List = (props) => {
+  const dispatch = useDispatch();
+
+  const list = useSelector((state) => state.storeMain.artists);
+
   const artists = () => {
-    return Artists.map((item) => {
-      if (item.City === props.filter) {
+    return list?.map((item) => {
+      if (item?.adress[0] === props.filter) {
         return <ArtistCard key={item.Id} {...item} />;
       } else if (props.filter === "All") {
         return <ArtistCard key={item.Id} {...item} />;

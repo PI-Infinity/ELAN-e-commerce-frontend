@@ -10,19 +10,19 @@ export const ArtistCard = (props) => {
   const OpenPopup = (action) => {
     setPopup(action);
   };
-
+  console.log(props.id);
   return (
     <>
       <Container>
-        <Link to={`/info/${props.Id}`}>
-          <Cover src={props.Cover} onClick={() => OpenPopup(true)} />
+        <Link to={`/info/${props.id}`}>
+          <Cover src={props.cover} onClick={() => OpenPopup(true)} />
         </Link>
         <Info>
-          <Name>{props.FirstName}</Name>
-          <Item>({props.Languages})</Item>
-          <Item>{props.Profession}</Item>
-          <Item>Phone: {props.Phone}</Item>
-          <Item>Adress: {props.Adress}</Item>
+          <Name>{props?.firstName + " " + props?.lastName}</Name>
+          <Item>{props?.languages}</Item>
+          <Item>{props?.Profession}</Item>
+          <Item>Phone: {props?.phoneNumber}</Item>
+          <Item>Adress: {props?.adress[0] + " " + props?.adress[1]}</Item>
           <Icons
             style={{
               display: "flex",
@@ -33,7 +33,7 @@ export const ArtistCard = (props) => {
             }}
           >
             <Link
-              to={`/info/${props.Id}`}
+              to={`/info/${props.id}`}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -42,7 +42,7 @@ export const ArtistCard = (props) => {
               <BsImages color="#320e24" className="icon" />
             </Link>
             <a
-              href={props.Instagram}
+              href={props.instagram}
               target="_blank"
               style={{
                 display: "flex",
@@ -53,7 +53,7 @@ export const ArtistCard = (props) => {
               <FaInstagram color="#320e24" className="icon" />
             </a>
             <a
-              href={props.WhatsApp}
+              href={props.whatsApp}
               target="_blank"
               style={{
                 display: "flex",
@@ -74,7 +74,7 @@ const Container = Styled.div`
 width: 12vw;
 height: 26vw;
 background: #FFC6E9;
-border-radius: 10px;
+border-radius: 0.5vw;
 cursor: pointer;
 display: flex;
 flex-direction: column;
@@ -91,6 +91,7 @@ transition: ease 200ms;
   height: 80vw;
   justify-content: space-between;
   padding: 4vw 1.5vw;
+  border-radius: 1vw;
 }
 
 `;
@@ -118,6 +119,7 @@ const Info = Styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.2vw;
   @media only screen and (max-width: 1100px) {
     gap: 0.4vw;
   }
@@ -126,7 +128,8 @@ const Info = Styled.div`
 `;
 
 const Name = Styled.span`
-  font-size: 1.2vw;
+  font-size: 1.1vw;
+  white-space: now-wrap;
   font-weight: bold;
   margin-bottom: 0.3vw;
   color: #011E2E;
@@ -141,6 +144,7 @@ const Item = Styled.span`
   font-size: 0.8vw;
   margin-bottom: 0.1vw;
   color: #011E2E;
+  white-space: nowrap;
 
   @media only screen and (max-width: 1100px) {
     font-size:  2.5vw;

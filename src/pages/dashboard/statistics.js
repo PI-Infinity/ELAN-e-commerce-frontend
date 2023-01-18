@@ -8,8 +8,8 @@ import {
   Year2023,
   Year2024,
   Year2025,
-} from "../calendar/monthsInSeconds";
-import { MonthsSales } from "../statistics/monthSales";
+} from "../../calendar/monthsInSeconds";
+import { MonthsSales } from "../../pages/dashboard/monthSales";
 import {
   IoMdArrowDropleftCircle,
   IoMdArrowDroprightCircle,

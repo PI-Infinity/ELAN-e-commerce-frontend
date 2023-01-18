@@ -10,11 +10,11 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { MdMenuOpen } from "react-icons/md";
 import { FaUserCheck } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import logo2 from "../assets/smallLogo.png";
+import logo2 from "../../assets/smallLogo.png";
 
 export const Order = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -52,16 +52,22 @@ export const Order = (props) => {
 
   const [selectedOption, setSelectedOption] = React.useState(props?.status);
   let bgColor;
-  if (selectedOption === "New Order") {
-    bgColor = "#a0e482";
-  } else if (selectedOption === "courier") {
-    bgColor = "#eef068";
-  } else if (selectedOption == "canceled") {
-    bgColor = "#e48282";
-  } else if (selectedOption == "gift") {
-    bgColor = "#FFC2F3";
-  } else if (selectedOption == "event") {
-    bgColor = "#e5e5e5";
+  if (!props?.front) {
+    if (selectedOption === "New Order") {
+      bgColor = "#a0e482";
+    } else if (selectedOption === "courier") {
+      bgColor = "#eef068";
+    } else if (selectedOption == "canceled") {
+      bgColor = "#e48282";
+    } else if (selectedOption == "gift") {
+      bgColor = "#FFC2F3";
+    } else if (selectedOption == "event") {
+      bgColor = "#e5e5e5";
+    } else if (selectedOption == "Not Finished") {
+      bgColor = "#f1f1f1";
+    } else {
+      bgColor = "rgba(255,255,2550,1)";
+    }
   } else {
     bgColor = "rgba(255,255,2550,1)";
   }
@@ -104,6 +110,8 @@ export const Order = (props) => {
     });
   };
 
+  console.log(props?.items);
+
   return (
     <OrderContainer
       key={props.orderNumber}
@@ -138,25 +146,29 @@ export const Order = (props) => {
         </b>
       </div>
       <ScrollContainer>
-        {props.items.map((item, index) => {
-          return (
-            <div
-              key={item.orderNumber}
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <P2 id="name">{item?.name}</P2>
-              <P2>
-                <b>{item?.quantity}</b>
-              </P2>
-              <P2>{item?.price} Gel</P2>
-              <P2>
-                <span style={{ color: "gray" }}>
-                  {item?.quantity * item?.price} Gel
-                </span>
-              </P2>
-            </div>
-          );
-        })}
+        {props?.items === "ELAN Brow Book" ? (
+          <div>ELAN Brow Book</div>
+        ) : (
+          props?.items?.map((item, index) => {
+            return (
+              <div
+                key={item.orderNumber}
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <P2 id="name">{item?.name}</P2>
+                <P2>
+                  <b>{item?.quantity}</b>
+                </P2>
+                <P2>{item?.price} Gel</P2>
+                <P2>
+                  <span style={{ color: "gray" }}>
+                    {item?.quantity * item?.price} Gel
+                  </span>
+                </P2>
+              </div>
+            );
+          })
+        )}
       </ScrollContainer>
 
       <div
@@ -184,12 +196,19 @@ export const Order = (props) => {
         <P>
           Full Sum:{" "}
           <Span>
-            {(
-              parseFloat(props.sum) -
-              parseFloat((props.sum / 100) * props.discount) +
-              parseFloat(props.delivery)
-            ).toFixed(0)}{" "}
-            Gel
+            {props.items === "ELAN Brow Book" ? (
+              <div>{props?.sum} Gel</div>
+            ) : (
+              <>
+                {" "}
+                {(
+                  parseFloat(props.sum) -
+                  parseFloat((props.sum / 100) * props.discount) +
+                  parseFloat(props.delivery)
+                ).toFixed(0)}{" "}
+                Gel
+              </>
+            )}
           </Span>
         </P>
         {!props.front && (
@@ -251,6 +270,7 @@ export const Order = (props) => {
                 }}
               >
                 <option value="New Order">New Order</option>
+                <option value="Not Finished">Not Finished</option>
                 <option value="courier">Courier</option>
                 <option value="canceled">Canceled</option>
                 <option value="completed">Completed</option>

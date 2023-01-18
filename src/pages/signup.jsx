@@ -46,7 +46,6 @@ export default function Signup() {
             firstname: firstname,
             lastname: lastname,
             ["adress"]: { city: city, adress: adress },
-            password: password,
             email: user.email,
             phone: phone,
             registerDate: serverTimestamp(),

@@ -4,12 +4,15 @@ import { CgClose } from "react-icons/cg";
 import { FaWhatsapp, FaInstagram } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { Artists } from "../data/artists";
+import { Artists } from "../../data/artists";
+import { useSelector } from "react-redux";
 
 export const Info = () => {
   const { Id } = useParams();
-  const artist = Artists.find((item) => item.Id === Id);
-  const [cov, setCov] = React.useState(artist?.Cover);
+  const list = useSelector((state) => state.storeMain.artists);
+  const artist = list.find((item) => item.id === parseInt(Id));
+
+  const [cov, setCov] = React.useState(artist?.cover);
 
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -24,56 +27,56 @@ export const Info = () => {
         <Wrapper2>
           <Cover src={cov} alt="ELAN" />
           <GalleryMobile>
-            {artist.Cover != "" ? (
+            {artist?.cover != "" ? (
               <img
-                src={artist.Cover}
-                className={cov != artist.Cover ? "img" : "imgSelected"}
-                onClick={() => setCov(artist.Cover)}
+                src={artist?.cover}
+                className={cov != artist?.cover ? "img" : "imgSelected"}
+                onClick={() => setCov(artist?.cover)}
               />
             ) : (
               <div></div>
             )}
-            {artist.Img1 != "" ? (
+            {artist?.images[0] != "" ? (
               <img
-                src={artist.Img1}
-                className={cov != artist.Img1 ? "img" : "imgSelected"}
-                onClick={() => setCov(artist.Img1)}
+                src={artist?.images[0]}
+                className={cov != artist?.images[0] ? "img" : "imgSelected"}
+                onClick={() => setCov(artist?.images[0])}
               />
             ) : (
               <div></div>
             )}
-            {artist.Img2 != "" ? (
+            {artist?.images[1] != "" ? (
               <img
-                src={artist.Img2}
-                className={cov != artist.Img2 ? "img" : "imgSelected"}
-                onClick={() => setCov(artist.Img2)}
+                src={artist?.images[1]}
+                className={cov != artist?.images[1] ? "img" : "imgSelected"}
+                onClick={() => setCov(artist?.images[1])}
               />
             ) : (
               <div></div>
             )}
-            {artist.Img3 != "" ? (
+            {artist?.images[2] != "" ? (
               <img
-                src={artist.Img3}
-                className={cov != artist.Img3 ? "img" : "imgSelected"}
-                onClick={() => setCov(artist.Img3)}
+                src={artist?.images[2]}
+                className={cov != artist?.images[2] ? "img" : "imgSelected"}
+                onClick={() => setCov(artist?.images[2])}
               />
             ) : (
               <div></div>
             )}
-            {artist.Img4 != "" ? (
+            {artist?.images[3] != "" ? (
               <img
-                src={artist.Img4}
-                className={cov != artist.Img4 ? "img" : "imgSelected"}
-                onClick={() => setCov(artist.Img4)}
+                src={artist?.images[3]}
+                className={cov != artist?.images[3] ? "img" : "imgSelected"}
+                onClick={() => setCov(artist?.images[3])}
               />
             ) : (
               <div></div>
             )}
-            {artist.Img5 != "" ? (
+            {artist?.images[4] != "" ? (
               <img
-                src={artist.Img5}
-                className={cov != artist.Img5 ? "img" : "imgSelected"}
-                onClick={() => setCov(artist.Img5)}
+                src={artist?.images[4]}
+                className={cov != artist?.images[4] ? "img" : "imgSelected"}
+                onClick={() => setCov(artist?.images[4])}
               />
             ) : (
               <div></div>
@@ -81,49 +84,27 @@ export const Info = () => {
           </GalleryMobile>
           <About>
             <Name>
-              <span>{artist.FirstName}</span>
-              <span>{artist.LastName}</span>
+              <span>{artist?.firstName}</span>
+              <span>{artist?.lastName}</span>
             </Name>
             <OtherInfo>
               <Item>
-                <b>Profession:</b> {artist.Profession}
+                <b>Profession:</b> {artist?.profession}
               </Item>
               <Item>
-                <b>Languages:</b> {artist.Languages}
+                <b>Languages:</b> {artist?.languages}
               </Item>
               <Item>
-                <b>Phone Number:</b> {artist.Phone}
+                <b>Phone Number:</b> {artist?.phoneNumber}
               </Item>
               <Item>
-                <b>Adress:</b> {artist.Adress}
+                <b>Adress:</b> {artist?.adress[0] + " " + artist?.adress[1]}
               </Item>
             </OtherInfo>
-            <Icons
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "start",
-                gap: "0.3vw",
-                alignItems: "center",
-                padding: "0.2vw 0",
-                marginTop: "1.2vw",
-              }}
-            >
-              <div
-                style={{
-                  backgroundColor: "white",
-                  padding: "0.3vw",
-                  borderRadius: "0.5vw",
-                  width: "2vw",
-                  height: "2vw",
-                  cursor: "pointer",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
+            <Icons>
+              <div>
                 <a
-                  href={artist.Instagram}
+                  href={artist?.Instagram}
                   target="_blank"
                   style={{
                     display: "flex",
@@ -135,21 +116,9 @@ export const Info = () => {
                 </a>
               </div>
 
-              <div
-                style={{
-                  backgroundColor: "white",
-                  padding: "0.3vw",
-                  borderRadius: "0.5vw",
-                  cursor: "pointer",
-                  width: "2vw",
-                  height: "2vw",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
+              <div>
                 <a
-                  href={artist.WhatsApp}
+                  href={artist?.whatsApp}
                   target="_blank"
                   style={{
                     display: "flex",
@@ -161,66 +130,58 @@ export const Info = () => {
                 </a>
               </div>
             </Icons>
-            <Description
-              style={{
-                marginTop: "1vw",
-                fontSize: "0.9vw",
-                marginBottom: "1vw",
-              }}
-            >
-              {artist.Description}
-            </Description>
+            <Description>{artist?.descriptionGeo}</Description>
             <Gallery>
-              {artist.Cover != "" ? (
+              {artist?.cover != "" ? (
                 <img
-                  src={artist.Cover}
-                  className={cov != artist.Cover ? "img" : "imgSelected"}
-                  onClick={() => setCov(artist.Cover)}
+                  src={artist?.cover}
+                  className={cov != artist?.cover ? "img" : "imgSelected"}
+                  onClick={() => setCov(artist?.cover)}
                 />
               ) : (
                 <div></div>
               )}
-              {artist.Img1 != "" ? (
+              {artist?.images[0] != "" ? (
                 <img
-                  src={artist.Img1}
-                  className={cov != artist.Img1 ? "img" : "imgSelected"}
-                  onClick={() => setCov(artist.Img1)}
+                  src={artist?.images[0]}
+                  className={cov != artist?.images[0] ? "img" : "imgSelected"}
+                  onClick={() => setCov(artist?.images[0])}
                 />
               ) : (
                 <div></div>
               )}
-              {artist.Img2 != "" ? (
+              {artist?.images[1] != "" ? (
                 <img
-                  src={artist.Img2}
-                  className={cov != artist.Img2 ? "img" : "imgSelected"}
-                  onClick={() => setCov(artist.Img2)}
+                  src={artist?.images[1]}
+                  className={cov != artist?.images[1] ? "img" : "imgSelected"}
+                  onClick={() => setCov(artist?.images[1])}
                 />
               ) : (
                 <div></div>
               )}
-              {artist.Img3 != "" ? (
+              {artist?.images[2] != "" ? (
                 <img
-                  src={artist.Img3}
-                  className={cov != artist.Img3 ? "img" : "imgSelected"}
-                  onClick={() => setCov(artist.Img3)}
+                  src={artist?.images[2]}
+                  className={cov != artist?.images[2] ? "img" : "imgSelected"}
+                  onClick={() => setCov(artist?.images[2])}
                 />
               ) : (
                 <div></div>
               )}
-              {artist.Img4 != "" ? (
+              {artist?.images[3] != "" ? (
                 <img
-                  src={artist.Img4}
-                  className={cov != artist.Img4 ? "img" : "imgSelected"}
-                  onClick={() => setCov(artist.Img4)}
+                  src={artist?.images[3]}
+                  className={cov != artist?.images[3] ? "img" : "imgSelected"}
+                  onClick={() => setCov(artist?.images[3])}
                 />
               ) : (
                 <div></div>
               )}
-              {artist.Img5 != "" ? (
+              {artist?.images[4] != "" ? (
                 <img
-                  src={artist.Img5}
-                  className={cov != artist.Img5 ? "img" : "imgSelected"}
-                  onClick={() => setCov(artist.Img5)}
+                  src={artist?.images[4]}
+                  className={cov != artist?.images[4] ? "img" : "imgSelected"}
+                  onClick={() => setCov(artist?.images[4])}
                 />
               ) : (
                 <div></div>
@@ -235,29 +196,32 @@ export const Info = () => {
 
 const Container = Styled.div`
    position: fixed;
-   top: 0;
+   top: 1vw;
    left: 0;
    width: 100%;
-   height: 100vh;
+   min-height: 101vh;
+   padding-bottom: 1vw;
+   height: auto;
    display: flex;
    flex-direction: column;
    justify-content: center;
    align-items: center;
-   z-index: 10000;
-   background: #f1f1f1;
+   z-index: 100;
+   background: #fff;
 
    @media only screen and (max-width: 1100px) {
     position: absolute;
     justify-content: start;
     height: auto;
     padding-bottom: 10vw;
+    top: 20vw;
   }
    
 
    .close {
     position: absolute;
     right: 2vw;
-    top: 2vw;
+    top: 7vw;
     cursor: pointer;
 
     @media only screen and (max-width: 1100px) {
@@ -358,10 +322,14 @@ const Description = Styled.span`
     letter-spacing: 0.03vw;
     color: #011E2E;
     height: auto;
+    margin-top: 1vw;
+    font-size: 0.9vw;
+    margin-bottom: 1vw;
 
     @media only screen and (max-width: 1100px) {
       height: auto;
       font-size: 3vw;
+      margin-top: 3vw;
     }
 `;
 
@@ -378,6 +346,36 @@ const OtherInfo = Styled.div`
 `;
 
 const Icons = Styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  gap: 0.3vw;
+  align-items: center;
+  padding: 0.2vw 0;
+  margin-top: 1.2vw;
+
+  @media only screen and (max-width: 1100px) {
+    gap: 3vw;
+    margin-top: 3vw
+  }
+
+  & > div {
+      background: white;
+      padding: 0.3vw;
+      border-radius: 0.5vw;
+      width: 2vw;
+      height: 2vw;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      @media only screen and (max-width: 1100px) {
+        padding: 3vw;
+        border-radius: 50%;
+      }
+  }
+
 .icon{
   transition: ease 200ms;
   cursor: pointer;

@@ -6,6 +6,7 @@ const initialState = {
   language: "geo",
   user: "",
   rerender: 0,
+  artists: [],
 };
 
 export const main = createSlice({
@@ -24,12 +25,21 @@ export const main = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
+    setArtists: (state, action) => {
+      state.artists = action.payload;
+    },
     setRerender: (state, action) => {
       state.rerender++;
     },
   },
 });
 
-export const { setOpenMenu, setOpenCart, setLanguage, setUser, setRerender } =
-  main.actions;
+export const {
+  setOpenMenu,
+  setOpenCart,
+  setLanguage,
+  setUser,
+  setArtists,
+  setRerender,
+} = main.actions;
 export default main.reducer;

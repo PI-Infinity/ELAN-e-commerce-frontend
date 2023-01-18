@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import shop from "../assets/shop.jpg";
-import guide from "../assets/guide.jpg";
+import book from "../assets/book.jpg";
 import events from "../assets/events.jpg";
 import artists from "../assets/artists.jpg";
 import { BestSellers } from "../components/bestSellers";
@@ -100,6 +100,22 @@ const Home = () => {
                 </Card>
                 <Card>
                   <Title>
+                    <span>{language.book}</span>
+                  </Title>
+                  <Link to="/book">
+                    <img
+                      src={book}
+                      alt="shop"
+                      style={{
+                        objectFit: "cover",
+                        width: "105%",
+                        height: "105%",
+                      }}
+                    />
+                  </Link>
+                </Card>
+                <Card>
+                  <Title>
                     <span>{language.artists}</span>
                   </Title>
                   <div
@@ -121,20 +137,6 @@ const Home = () => {
                       />
                     </Link>
                   </div>
-                </Card>
-                <Card>
-                  <Title>
-                    <span>{language.guide}</span>
-                  </Title>
-                  <img
-                    src={guide}
-                    alt="shop"
-                    style={{
-                      objectFit: "cover",
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  />
                 </Card>
               </MainContent>
               <ButtonAnimation>

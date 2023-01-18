@@ -107,7 +107,9 @@ export const Header = (props) => {
             </Link>
             <CartIcon onClick={() => navigate("/cart")}>
               <div style={{ height: 0 }}>
-                <div className="qnt">{cartItems?.length}</div>
+                <div className="qnt">
+                  {cartItems?.length > 0 ? cartItems?.length : 0}
+                </div>
               </div>
               <HiShoppingBag className="cartIcon" />
             </CartIcon>
@@ -218,7 +220,7 @@ export const Header = (props) => {
 };
 
 const Container = styled.div`
-  opacity: ${(props) => (props.loading ? 0 : 1)};
+  // opacity: ${(props) => (props.loading ? 0 : 1)};
   width: 100%;
   height: 4vw;
   box-shadow: 0px 0.1vw 0.3vw rgba(2, 2, 2, 0.1);

@@ -4,11 +4,38 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { rus, eng, geo } from "../languages/pages/returnPolice";
 import { useSelector, useDispatch } from "react-redux";
+import { db } from "../firebase";
+import { collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
+import uuid from "react-uuid";
 
 const ReturnPolice = () => {
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  // React.useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, []);
+
+  const [sent, setSent] = React.useState(false);
+
+  const [name, setName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [phone, setPhone] = React.useState("");
+  const [text, setText] = React.useState("");
+
+  // add order to firebase
+  function sendMessage() {
+    var time = serverTimestamp();
+    var id = `${email}:${uuid()}`;
+    setDoc(doc(db, "notifications", `${id}`), {
+      name: name,
+      email: email,
+      phone: phone,
+      text: text,
+      date: time,
+      type: "returns",
+    });
+    setSent(true);
+  }
+
+  //
   // define language
   let language;
   const lang = useSelector((state) => state.storeMain.language);
@@ -23,22 +50,45 @@ const ReturnPolice = () => {
   return (
     <Container>
       <Wrapper>
-        {language.return}
-        <form
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "10px",
-            marginTop: "1vw",
-          }}
-        >
-          <Input type="text" placeholder="სახელი, გვარი" />
-          <Input type="text" placeholder="ელ ფოსტა" />
-          <Input type="text" placeholder="მობილურის ნომერი" />
-          <Textarea type="text" placeholder="პროდუქციის შესახებ" />
-          <Button type="submit">გაგზავნა</Button>
-        </form>
+        <p>{language.return}</p>
+        {sent ? (
+          <>
+            <h3>Message Sent Succesfuly!</h3>
+            <Button onClick={() => setSent(false)}>ახალი წერილი</Button>
+          </>
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "10px",
+              marginTop: "1vw",
+            }}
+          >
+            <Input
+              type="text"
+              placeholder="სახელი, გვარი"
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Input
+              type="text"
+              placeholder="ელ ფოსტა"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              type="text"
+              placeholder="მობილურის ნომერი"
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <Textarea
+              type="text"
+              placeholder="პროდუქციის შესახებ"
+              onChange={(e) => setText(e.target.value)}
+            />
+            <Button onClick={sendMessage}>გაგზავნა</Button>
+          </div>
+        )}
       </Wrapper>
     </Container>
   );
@@ -52,8 +102,9 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding-top: 2vw;
-  min-height: 90vh;
-
+  margin-top: 3vw;
+  margin-bottom: 3vw;
+  min-height: 100vh;
   @media only screen and (max-width: 600px) {
     margin-top: 20vw;
   }
@@ -61,14 +112,13 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   width: 60vw;
-  height: 37vw;
   border-radius: 0.5vw;
   background: #e7f5ff;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  padding-bottom: 1vw;
+  padding-bottom: 3vw;
   margin-top: 2vw;
 
   @media only screen and (max-width: 600px) {
@@ -111,16 +161,19 @@ const Input = styled.input`
 
 const Textarea = styled.textarea`
   border: none;
-  height: 13vw;
+  height: 7vw;
   width: 25vw;
   border-radius: 0.2vw;
   text-align: center;
+  padding-top: 1vw;
 
   @media only screen and (max-width: 600px) {
     width: 70vw;
     height: 50vw;
     padding: 1.5vw;
     border-radius: 1.5vw;
+    padding-top: 3vw;
+    font-size: 16px;
   }
 
   :focus {

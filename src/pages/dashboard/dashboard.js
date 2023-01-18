@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Orders from "../components/orders";
+import Orders from "../../pages/dashboard/orders";
 import { collection, doc, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase";
-import { Outcome } from "../components/outcome";
-import { ProductList } from "../components/productList";
-import { UserList } from "../components/userList";
-import { Salons } from "../components/salons";
-import { Statistics } from "../pages/statistics";
-import { setProductsList } from "../redux/products";
+import { db } from "../../firebase";
+import { Outcome } from "../../pages/dashboard/outcome";
+import { ProductList } from "../../pages/dashboard/productList";
+import { UserList } from "../../pages/dashboard/userList";
+import { ArtistList } from "../../pages/dashboard/artistList";
+import { Salons } from "../../pages/dashboard/salons";
+import { Statistics } from "../../pages/dashboard/statistics";
+import { Notifications } from "../../pages/dashboard/notifications";
+import { Marketing } from "../../pages/dashboard/marketing";
+import { setProductsList } from "../../redux/products";
 import { useDispatch } from "react-redux";
 import {
   Routes,
@@ -18,7 +21,7 @@ import {
   Link,
 } from "react-router-dom";
 import { ImStatsBars } from "react-icons/im";
-import { DashboardNavigator } from "../components/dashboardNavigator";
+import { DashboardNavigator } from "../../pages/dashboard/dashboardNavigator";
 
 function Dashboard(props) {
   const navigate = useNavigate();
@@ -45,6 +48,12 @@ function Dashboard(props) {
     content = <Statistics />;
   } else if (navigator === 6) {
     content = <UserList />;
+  } else if (navigator === 7) {
+    content = <ArtistList />;
+  } else if (navigator === 8) {
+    content = <Notifications />;
+  } else if (navigator === 9) {
+    content = <Marketing />;
   }
 
   return (
@@ -110,6 +119,10 @@ const Header = styled.div`
   z-index: 3;
   padding: 0 3vw;
   box-sizing: border-box;
+
+  @media only screen and (max-width: 1200px) {
+    display: none;
+  }
 `;
 
 const GoToShop = styled.div`

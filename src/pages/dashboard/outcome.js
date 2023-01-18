@@ -16,7 +16,7 @@ import {
   onSnapshot,
   serverTimestamp,
 } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setList,
@@ -25,12 +25,12 @@ import {
   setTitle,
   setOutcomeSum,
   setOutcomeSearch,
-} from "../redux/outcome";
+} from "../../redux/outcome";
 import {
   StartOutcomeCalendarComponent,
   EndOutcomeCalendarComponent,
-} from "../components/calendar";
-import { setStartDate, setEndDate } from "../redux/calendar";
+} from "../../components/calendar";
+import { setStartDate, setEndDate } from "../../redux/calendar";
 import Loader from "react-js-loader";
 
 export const Outcome = () => {

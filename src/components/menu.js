@@ -72,7 +72,7 @@ export const Menu = (props) => {
             <Item>{language.shop}</Item>
           </Link>
           <Link
-            to="/education"
+            to="/book"
             style={{ textDecoration: "none", color: "inherit" }}
             onClick={() => mainDispatch(setOpenMenu("-20vw"))}
           >

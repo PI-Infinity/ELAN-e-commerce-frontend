@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import {
   onSnapshot,
   collection,
@@ -26,7 +26,7 @@ import {
 } from "react-icons/md";
 import { GiConfirmed } from "react-icons/gi";
 import axios from "axios";
-import { setProductsList } from "../redux/products";
+import { setProductsList } from "../../redux/products";
 import { useDispatch, useSelector } from "react-redux";
 import { RiSearch2Line } from "react-icons/ri";
 import Loader from "react-js-loader";

@@ -4,7 +4,7 @@ import { useSelector } from "../../redux/main";
 export const eng = {
   shop: "Shop",
   events: "Beauty Events",
-  guide: "Product Guide",
+  book: "ELAN Brow Book",
   artists: "ELAN Artists",
   start: "Start Shoping",
 };
@@ -12,7 +12,7 @@ export const eng = {
 export const geo = {
   shop: "მაღაზია",
   events: "ღონისძიებები",
-  guide: "პროდუქტების სახელმძღვანელო",
+  book: "ELAN Brow Book",
   artists: "ELAN არტისტები",
   start: "მაღაზია",
 };
@@ -20,7 +20,7 @@ export const geo = {
 export const rus = {
   shop: "Магазин",
   events: "Мероприятие",
-  guide: "Руководство по продукту",
+  book: "ELAN Brow Book",
   artists: "ELAN Артисты",
   start: "Начать покупки",
 };

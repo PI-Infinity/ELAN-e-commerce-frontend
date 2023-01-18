@@ -33,6 +33,21 @@ export const DashboardNavigator = (props) => {
       title: "Users",
       onClick: () => props.setNavigator(6),
     },
+    {
+      id: 7,
+      title: "ELAN Artists",
+      onClick: () => props.setNavigator(7),
+    },
+    {
+      id: 8,
+      title: "Notifications",
+      onClick: () => props.setNavigator(8),
+    },
+    {
+      id: 9,
+      title: "Marketing",
+      onClick: () => props.setNavigator(9),
+    },
   ];
 
   return (
@@ -63,6 +78,10 @@ const Container = styled.div`
   background: #fff;
   z-index: 2;
   border-right: 1px solid #ccc;
+
+  @media only screen and (max-width: 1200px) {
+    display: none;
+  }
 `;
 
 const Item = styled.div`

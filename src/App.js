@@ -4,11 +4,13 @@ import styled, { ThemeProvider } from "styled-components";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Home from "./pages/home";
 import Shop from "./pages/shop";
-import Dashboard from "./pages/dashboard";
+import Dashboard from "./pages/dashboard/dashboard";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import User from "./pages/user";
-import Artists from "./pages/artists";
+import Artists from "./pages/artists/artists";
+import Books from "./pages/book";
+import ArtistsInfo from "./pages/artists/artistInfo";
 import Product from "./pages/product";
 import Delivery from "./pages/delivery";
 import Privacy from "./pages/privacyPolicy";
@@ -17,19 +19,25 @@ import Terms from "./pages/terms";
 import ReturnPolice from "./pages/returnPolice";
 import Contact from "./pages/contact";
 import Checkout from "./pages/checkout";
-import Complete from "./pages/complete";
+import BookCheckout from "./pages/checkout-book";
+import Success from "./pages/success";
 import { lightTheme, darkTheme, GlobalStyles } from "./context/theme";
 import { collection, doc, onSnapshot, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
-import { ProductList } from "./components/productList";
-import { setProductsList, setSalons } from "./redux/products";
+import { ProductList } from "./pages/dashboard/productList";
+import {
+  setProductsList,
+  setSalons,
+  setCartList,
+  setCart,
+} from "./redux/products";
 import { useDispatch, useSelector } from "react-redux";
 import Flag from "react-world-flags";
 import { Menu } from "./components/menu";
 import { Cart } from "./components/cart";
 import { setLanguage } from "./redux/main";
 import { AuthContext } from "./context/AuthContext";
-import { Info } from "./components/artistInfo";
+import { Info } from "./pages/artists/artistInfo";
 import { Header } from "./components/header";
 import { Footer } from "./components/footer";
 import { setUser } from "./redux/main";
@@ -37,6 +45,7 @@ import { setOrderItems } from "./redux/dashboard";
 import { LoaderAnimation } from "./components/loader";
 import logo from "./assets/logo.png";
 import axios from "axios";
+import { setArtists } from "./redux/main";
 
 function App() {
   const dispatch = useDispatch();
@@ -46,6 +55,25 @@ function App() {
   const { currentUser } = useContext(AuthContext);
 
   const rerender = useSelector((state) => state.storeMain.rerender);
+  const cartItems = useSelector((state) => state.storeProducts.cart);
+
+  // /**
+  //  * add cart in localstorage
+  //  */
+
+  useEffect(() => {
+    if (localStorage.getItem("cart:elan-ecommerce")?.length > 0) {
+      const localCart = JSON?.parse(
+        localStorage.getItem("cart:elan-ecommerce")
+      );
+      dispatch(setCartList([...localCart]));
+    }
+    return;
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cart:elan-ecommerce", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   /** */
   // import current user info
@@ -98,6 +126,23 @@ function App() {
 
   /** */
   // define authorized pages
+  const RequireAdminAuth = ({ children }) => {
+    return currentUser?.uid === "6u6EnWmJjLPZLvQLbgHrMqmehwz1" ? (
+      children
+    ) : (
+      <Navigate to="/login" />
+    );
+  };
+
+  /** */
+  // import artists from firebase
+  React.useEffect(() => {
+    const data = onSnapshot(collection(db, "artists"), (snapshot) => {
+      dispatch(setArtists(snapshot.docs.map((doc) => doc.data())));
+    });
+    return data;
+  }, []);
+
   const RequireAuth = ({ children }) => {
     return currentUser ? children : <Navigate to="/login" />;
   };
@@ -164,9 +209,9 @@ function App() {
                 path="/dashboard"
                 element={
                   // <PrivateRoute>
-                  <RequireAuth>
+                  <RequireAdminAuth>
                     <Dashboard />
-                  </RequireAuth>
+                  </RequireAdminAuth>
                 }
               ></Route>
 
@@ -197,6 +242,13 @@ function App() {
                 element={
                   // <PrivateRoute>
                   <Artists />
+                }
+              ></Route>
+              <Route
+                path="/book"
+                element={
+                  // <PrivateRoute>
+                  <Books />
                 }
               ></Route>
               <Route
@@ -256,6 +308,13 @@ function App() {
                 }
               ></Route>
               <Route
+                path="/checkout/book"
+                element={
+                  // <PrivateRoute>
+                  <BookCheckout />
+                }
+              ></Route>
+              <Route
                 path="/cart"
                 element={
                   // <PrivateRoute>
@@ -263,10 +322,10 @@ function App() {
                 }
               ></Route>
               <Route
-                path="/complete"
+                path="/success"
                 element={
                   // <PrivateRoute>
-                  <Complete />
+                  <Success />
                 }
               ></Route>
             </Routes>

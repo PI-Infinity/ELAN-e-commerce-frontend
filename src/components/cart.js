@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { ClearCart, setCart, Increment, Decriment } from "../redux/products";
+import { ClearCart, Increment, Decriment } from "../redux/products";
 import { setOpenCart } from "../redux/main";
 import { MdRemove } from "react-icons/md";
 import { removeItem } from "../redux/products";
@@ -35,7 +35,7 @@ export const Cart = (props) => {
   const DefineSum = () => {
     let sum = [];
     const result = cartItems?.map((item) => {
-      return sum.push(item.qnt * item.price);
+      return sum.push(item?.quantity * item?.price);
     });
     const initialValue = 0;
     const sumWithInitial = sum.reduce(
@@ -58,6 +58,13 @@ export const Cart = (props) => {
     language = rus;
   }
 
+  const clearStorage = () => {
+    localStorage.removeItem("cart:elan-ecommerce");
+    dispatch(ClearCart());
+  };
+
+  console.log(cartItems);
+
   return (
     <>
       <Container openCart={openCart} mobileProps={mobileProps} height={height}>
@@ -66,7 +73,7 @@ export const Cart = (props) => {
             <Button clear={true} onClick={() => navigate(-1)}>
               <BsBoxArrowInLeft className="backIcon" />
             </Button>
-            <Button clear={true} onClick={() => dispatch(ClearCart())}>
+            <Button clear={true} onClick={clearStorage}>
               <span className="clear">{language.clear}</span>
             </Button>
           </Buttons>
@@ -76,19 +83,19 @@ export const Cart = (props) => {
                 return (
                   <ItemContainer key={index}>
                     <ItemTitle>
-                      <span>{item.title}</span>
+                      <span>{item.name}</span>
                     </ItemTitle>
                     <ItemCounter>
-                      <IncrDecr onClick={() => dispatch(Decriment(item.title))}>
+                      <IncrDecr onClick={() => dispatch(Decriment(item?.name))}>
                         <span style={{ fontWeight: "bold", color: "red" }}>
                           -
                         </span>
                       </IncrDecr>
                       <span style={{ padding: "0 0.5vw" }}>
-                        {item.qnt}
+                        {item?.quantity}
                         {language.pcs}
                       </span>
-                      <IncrDecr onClick={() => dispatch(Increment(item.title))}>
+                      <IncrDecr onClick={() => dispatch(Increment(item?.name))}>
                         <span style={{ fontWeight: "bold", color: "green" }}>
                           +
                         </span>
@@ -96,17 +103,17 @@ export const Cart = (props) => {
                     </ItemCounter>
                     <ItemPrice>
                       <span>
-                        {item.price} {language.gel}{" "}
+                        {item?.price} {language.gel}{" "}
                       </span>
                     </ItemPrice>
                     <TotalPrice>
                       <span>
-                        {item.price * item.qnt} {language.gel}{" "}
+                        {item?.price * item?.quantity} {language.gel}{" "}
                       </span>
                     </TotalPrice>
 
                     <ItemRemover
-                      onClick={() => dispatch(removeItem(item.title))}
+                      onClick={() => dispatch(removeItem(item?.name))}
                     >
                       <MdRemove style={{ color: "red" }} />
                     </ItemRemover>
@@ -180,24 +187,28 @@ const ItemList = styled.div`
   gap: 0.25vw;
   overflow-x: scroll;
   height: auto;
+  min-height: 15vw;
   align-items: center;
   margin-bottom: 50px;
 
   @media only screen and (max-width: 621px) {
     gap: 3vw;
     margin-top: 2vw;
-  
-`;
+    min-height: 50vh;
+    
+    `;
 
 const Empty = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 15vw;
 
-  // @media only screen and (max-width: 621px) {
-  //   width: 100vw;
-  // }
+  @media only screen and (max-width: 621px) {
+    min-height: 50vh;
+    width: 100vw;
+  }
 `;
 
 const ItemContainer = styled.div`

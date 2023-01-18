@@ -44,7 +44,6 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   width: 60vw;
-  height: 37vw;
   border-radius: 0.5vw;
   background: #e7f5ff;
   display: flex;
